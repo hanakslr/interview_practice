@@ -3,7 +3,7 @@ This is a test harness for the problem for the FoodDeliverySystem in food_delive
 """
 
 import argparse
-from food_delivery import FoodDeliverySystem
+from food_delivery_system import FoodDeliverySystem
 
 
 def test_exec(suite_name: str, tests: list[dict]):

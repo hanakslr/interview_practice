@@ -1,5 +1,5 @@
 """
-The problem description for this problem is in prompts/food_delivery.md.
+The problem description for this problem is in food_delivery.md.
 
 To use, read through the problem description linked above - starting just with level 1.
 Not looking ahead most accurately simulates how things like CodeSignal progressively show you the problem.
