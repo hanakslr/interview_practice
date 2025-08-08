@@ -168,6 +168,42 @@ class ChatSystem:
         return ""
 
 
+def test_exec(suite_name: str, tests: list[dict]):
+    print("\n-----------------")
+    print(f"\n Testing {suite_name}")
+    cs = ChatSystem()
+
+    for test in tests:
+        fn = test["fn"]
+        args = test["args"]
+        expected = test["expected"]
+
+        result = getattr(cs, fn)(*args)
+        print(f"\n{fn}({', '.join(args)})")
+        assert result == expected, f"❌ Expected {expected}, got {result}."
+        print(f"✅ Passed: {'(empty)' if result == '' else result}")
+
+    print(f"\n💯 {suite_name} passes")
+
+
+def anon_test_level_1():
+    # Tests same thing as level 1, but using
+    tests = [
+        {"fn": "send_message", "args": ["Alice", "msg1", "Hello Bob!"], "expected": ""},
+        {
+            "fn": "send_message",
+            "args": ["Alice", "msg2", "How are you?"],
+            "expected": "",
+        },
+        {"fn": "get_message", "args": ["Alice", "msg1"], "expected": "Hello Bob!"},
+        {"fn": "get_message", "args": ["Alice", "msg3"], "expected": ""},
+        {"fn": "delete_message", "args": ["Alice", "msg1"], "expected": True},
+        {"fn": "delete_message", "args": ["Alice", "msg3"], "expected": False},
+    ]
+
+    test_exec("Level 1", tests)
+
+
 def test_level_1():
     cs = ChatSystem()
     assert cs.send_message("Alice", "msg1", "Hello Bob!") == ""
@@ -220,6 +256,7 @@ def test_level_4():
 
 if __name__ == "__main__":
     print("Running chat")
+    anon_test_level_1()
     test_level_1()
     test_level_2()
     test_level_3()
