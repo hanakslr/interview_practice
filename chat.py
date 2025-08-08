@@ -1,3 +1,4 @@
+import argparse
 from collections import defaultdict
 from dataclasses import dataclass
 from typing import Optional
@@ -185,7 +186,6 @@ def test_exec(suite_name: str, tests: list[dict]):
 
 
 def test_level_1():
-    # Tests same thing as level 1, but using
     tests = [
         {"fn": "send_message", "args": ["Alice", "msg1", "Hello Bob!"], "expected": ""},
         {
@@ -203,7 +203,6 @@ def test_level_1():
 
 
 def test_level_2():
-    # Tests same thing as level 2, but using the test_exec pattern
     tests = [
         {
             "fn": "send_message",
@@ -237,7 +236,6 @@ def test_level_2():
 
 
 def test_level_3():
-    # Tests same thing as level 3, but using the test_exec pattern
     tests = [
         {
             "fn": "send_message_with_expiry",
@@ -262,7 +260,6 @@ def test_level_3():
 
 
 def test_level_4():
-    # Tests same thing as level 4, but using the test_exec pattern
     tests = [
         {
             "fn": "send_message_with_expiry",
@@ -287,8 +284,20 @@ def test_level_4():
 
 
 if __name__ == "__main__":
-    print("Running chat")
-    test_level_1()
-    test_level_2()
-    test_level_3()
-    test_level_4()
+    print("🔄 Running chat")
+    parser = argparse.ArgumentParser(
+        description="A coding practice problem simulating a chat messaging system, where it get progressively more difficult through 4 levels."
+    )
+
+    parser.add_argument(
+        "--level",
+        type=int,
+        default=4,
+        help="The number of levels to run (optional - defaults to all)",
+    )
+    args = parser.parse_args()
+
+    test_suites = [test_level_1, test_level_2, test_level_3, test_level_4]
+
+    for i in range(min(4, args.level)):
+        test_suites[i]()
