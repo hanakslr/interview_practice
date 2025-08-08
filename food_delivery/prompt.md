@@ -20,7 +20,7 @@ Start with:
 
 ```
 class FoodDeliverySystem:
-    def **init**(self):
+    def __init__(self):
         pass
 ```
 
@@ -30,13 +30,13 @@ Implement two methods:
 
 ```
 def place_order(self, order_id: str) -> None:
-"""A new food order has been placed."""
+    """A new food order has been placed."""
 
 def driver_available(self, driver_id: str) -> None:
-"""A new driver is now available to take an order."""
+    """A new driver is now available to take an order."""
 
 def get_assignments(self) -> List[Tuple[str, str]]:
-"""Return a list of (order_id, driver_id) pairs that have been assigned."""
+    """Return a list of (order_id, driver_id) pairs that have been assigned."""
 ```
 
 Rules:
@@ -64,10 +64,10 @@ Add:
 
 ```
 def cancel_order(self, order_id: str) -> None:
-"""Cancel a pending order. Has no effect if already assigned."""
+    """Cancel a pending order. Has no effect if already assigned."""
 
 def cancel_driver(self, driver_id: str) -> None:
-"""Cancel a pending driver. Has no effect if already assigned."""
+    """Cancel a pending driver. Has no effect if already assigned."""
 ```
 
 Behavior:

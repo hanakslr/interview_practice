@@ -13,8 +13,8 @@ Start with:
 
 ```
 class BankLedger:
-def **init**(self):
-pass
+    def __init__(self):
+        pass
 ```
 
 ## 🧩 Level 1: Accounts and balances (10–15 min)
