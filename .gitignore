@@ -1,0 +1,4 @@
+.problems/
+.solutions/
+
+*/__pycache__/*
