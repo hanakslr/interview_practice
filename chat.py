@@ -143,8 +143,6 @@ class ChatSystem:
 
         self.backups[timestamp] = {"user_messages": bu_users, "messages": valid_msgs}
 
-        print(f"Valid msg {valid_msgs}")
-
         return len(valid_msgs.keys())
 
     def unzip_messages(self, restore_timestamp: int, backup_timestamp: int) -> str:
@@ -179,14 +177,14 @@ def test_exec(suite_name: str, tests: list[dict]):
         expected = test["expected"]
 
         result = getattr(cs, fn)(*args)
-        print(f"\n{fn}({', '.join(args)})")
+        print(f"\n{fn}({', '.join(map(str, args))})")
         assert result == expected, f"❌ Expected {expected}, got {result}."
         print(f"✅ Passed: {'(empty)' if result == '' else result}")
 
-    print(f"\n💯 {suite_name} passes")
+    print(f"\n🥳 {suite_name} passes")
 
 
-def anon_test_level_1():
+def test_level_1():
     # Tests same thing as level 1, but using
     tests = [
         {"fn": "send_message", "args": ["Alice", "msg1", "Hello Bob!"], "expected": ""},
@@ -204,59 +202,92 @@ def anon_test_level_1():
     test_exec("Level 1", tests)
 
 
-def test_level_1():
-    cs = ChatSystem()
-    assert cs.send_message("Alice", "msg1", "Hello Bob!") == ""
-    assert cs.send_message("Alice", "msg2", "How are you?") == ""
-    assert cs.get_message("Alice", "msg1") == "Hello Bob!"
-    assert cs.get_message("Alice", "msg3") == ""
-    assert cs.delete_message("Alice", "msg1") is True
-    assert cs.delete_message("Alice", "msg3") is False
-
-    print("Test 1 passes")
-
-
 def test_level_2():
-    cs = ChatSystem()
-    cs.send_message("Alice", "msg10", "Meeting at 5")
-    cs.send_message("Alice", "msg20", "See you soon")
-    cs.send_message("Alice", "note1", "Buy groceries")
+    # Tests same thing as level 2, but using the test_exec pattern
+    tests = [
+        {
+            "fn": "send_message",
+            "args": ["Alice", "msg10", "Meeting at 5"],
+            "expected": "",
+        },
+        {
+            "fn": "send_message",
+            "args": ["Alice", "msg20", "See you soon"],
+            "expected": "",
+        },
+        {
+            "fn": "send_message",
+            "args": ["Alice", "note1", "Buy groceries"],
+            "expected": "",
+        },
+        {
+            "fn": "list_messages_by_prefix",
+            "args": ["Alice", "msg"],
+            "expected": "msg10(Meeting at 5), msg20(See you soon)",
+        },
+        {
+            "fn": "list_messages",
+            "args": ["Alice"],
+            "expected": "msg10(Meeting at 5), msg20(See you soon), note1(Buy groceries)",
+        },
+        {"fn": "list_messages_by_prefix", "args": ["Bob", ""], "expected": ""},
+    ]
 
-    assert (
-        cs.list_messages_by_prefix("Alice", "msg")
-        == "msg10(Meeting at 5), msg20(See you soon)"
-    )
-    assert (
-        cs.list_messages("Alice")
-        == "msg10(Meeting at 5), msg20(See you soon), note1(Buy groceries)"
-    )
-    assert cs.list_messages_by_prefix("Bob", "") == ""
-
-    print("Level 2 passes")
+    test_exec("Level 2", tests)
 
 
 def test_level_3():
-    cs = ChatSystem()
-    cs.send_message_with_expiry("Alice", "msg1", "See you soon", 11, 10)
-    cs.send_message_at("Alice", "msg2", "Good morning!", 4)
-    assert cs.delete_message_at("Alice", "msg1", 8) is True
-    assert cs.get_message_at("Alice", "msg1", 12) == ""
-    assert cs.list_messages_at("Alice", 13) == "msg2(Good morning!)"
-    print("level 3 done")
+    # Tests same thing as level 3, but using the test_exec pattern
+    tests = [
+        {
+            "fn": "send_message_with_expiry",
+            "args": ["Alice", "msg1", "See you soon", 11, 10],
+            "expected": None,
+        },
+        {
+            "fn": "send_message_at",
+            "args": ["Alice", "msg2", "Good morning!", 4],
+            "expected": None,
+        },
+        {"fn": "delete_message_at", "args": ["Alice", "msg1", 8], "expected": True},
+        {"fn": "get_message_at", "args": ["Alice", "msg1", 12], "expected": ""},
+        {
+            "fn": "list_messages_at",
+            "args": ["Alice", 13],
+            "expected": "msg2(Good morning!)",
+        },
+    ]
+
+    test_exec("Level 3", tests)
 
 
 def test_level_4():
-    cs = ChatSystem()
-    cs.send_message_with_expiry("Bob", "msg1", "Meeting at 5", 60, 30)
-    assert cs.zip_messages(70) == 1
-    cs.send_message_with_expiry("Bob", "msg2", "Dinner at 8", 75, 20)
-    assert cs.unzip_messages(100, 70) == ""
-    assert cs.list_messages_at("Bob", 100) == "msg1(Meeting at 5)"
+    # Tests same thing as level 4, but using the test_exec pattern
+    tests = [
+        {
+            "fn": "send_message_with_expiry",
+            "args": ["Bob", "msg1", "Meeting at 5", 60, 30],
+            "expected": None,
+        },
+        {"fn": "zip_messages", "args": [70], "expected": 1},
+        {
+            "fn": "send_message_with_expiry",
+            "args": ["Bob", "msg2", "Dinner at 8", 75, 20],
+            "expected": None,
+        },
+        {"fn": "unzip_messages", "args": [100, 70], "expected": ""},
+        {
+            "fn": "list_messages_at",
+            "args": ["Bob", 100],
+            "expected": "msg1(Meeting at 5)",
+        },
+    ]
+
+    test_exec("Level 4", tests)
 
 
 if __name__ == "__main__":
     print("Running chat")
-    anon_test_level_1()
     test_level_1()
     test_level_2()
     test_level_3()
